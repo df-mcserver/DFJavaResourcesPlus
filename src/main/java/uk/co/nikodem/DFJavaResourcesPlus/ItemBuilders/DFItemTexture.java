@@ -11,24 +11,18 @@ import team.unnamed.creative.model.ModelTexture;
 import team.unnamed.creative.model.ModelTextures;
 import team.unnamed.creative.texture.Texture;
 
-import java.net.URL;
-
 import static uk.co.nikodem.DFJavaResourcesPlus.Main.MINECRAFT;
 import static uk.co.nikodem.DFJavaResourcesPlus.Main.NAMESPACE;
 
 public class DFItemTexture {
-    public static boolean createItemTexture(ResourcePack resourcePack, @Subst("example_item") String itemName) {
+    public static boolean createItemTexture(ResourcePack resourcePack, @Subst("example_item") String itemName, Writable file) {
 
         String namespaced = "item/"+itemName;
         String namespacedTextureFile = "item/"+itemName+".png";
-        String expectedFileName = itemName+".png";
-
-        URL expectedResource = ClassLoader.getSystemClassLoader().getResource(expectedFileName);
-        if (expectedResource == null) return false;
 
         Texture texture = Texture.texture()
                 .key(Key.key(NAMESPACE, namespacedTextureFile))
-                .data(Writable.resource(ClassLoader.getSystemClassLoader(), expectedFileName))
+                .data(file)
                 .build();
 
         Model model = Model.model()

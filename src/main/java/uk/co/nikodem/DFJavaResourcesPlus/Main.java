@@ -6,6 +6,12 @@ import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter;
 import uk.co.nikodem.DFJavaResourcesPlus.ItemBuilders.DFItemTexture;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class Main {
     public static String NAMESPACE = "dfjr";
@@ -20,7 +26,24 @@ public class Main {
         System.out.println("Starting resource pack creation..");
         ResourcePack resourcePack = ResourcePack.resourcePack();
 
-        System.out.println("Adding vein_axe to resource pack.. Success: "+DFItemTexture.createItemTexture(resourcePack, "vein_axe"));
+        System.out.println("Adding item assets..");
+        try (Stream<Path> paths = Files.walk(Paths.get("assets/items"))) {
+            for (Path path : paths.toList()) {
+                File img = path.toFile();
+                if (!img.isFile()) continue;
+                Writable writable = Writable.file(img);
+
+                String[] split_filename = img.getName().split("\\.");
+                String asset_name = split_filename[0];
+                String file_extension = split_filename[1].toLowerCase();
+
+                if (!file_extension.equals("png")) continue;
+
+                System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Adding metadata..");
         resourcePack.packMeta(PACK_FORMAT, DESCRIPTION);
