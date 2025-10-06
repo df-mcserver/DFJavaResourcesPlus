@@ -1,8 +1,10 @@
 package uk.co.nikodem.DFJavaResourcesPlus;
 
+import org.jetbrains.annotations.Nullable;
 import team.unnamed.creative.ResourcePack;
 import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter;
+import uk.co.nikodem.DFJavaResourcesPlus.ItemBuilders.DFArmourTexture;
 import uk.co.nikodem.DFJavaResourcesPlus.ItemBuilders.DFItemTexture;
 
 import java.io.File;
@@ -10,6 +12,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class Main {
@@ -35,6 +40,37 @@ public class Main {
             e.printStackTrace();
         }
 
+        Map<String, List<File>> armours = new HashMap<>();
+
+        System.out.println("Adding armour assets..");
+        try (Stream<Path> paths = Files.walk(Paths.get("assets/armour/main"))) {
+            for (Path path : paths.toList()) {
+                File file = path.toFile();
+                if (file.isFile()) armours.put(file.getName(), List.of(file));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (Stream<Path> paths = Files.walk(Paths.get("assets/armour/lower"))) {
+            for (Path path : paths.toList()) {
+                File file = path.toFile();
+                if (file.isFile()) {
+                    List<File> val = armours.get(file.getName());
+                    armours.replace(file.getName(), List.of(val.getFirst(), file));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (Map.Entry<String, List<File>> armour : armours.entrySet()) {
+            if (armour.getValue() == null) continue;
+            if (armour.getValue().size() != 2) continue;
+
+            doArmourFile(resourcePack, armour.getValue().getFirst(), armour.getValue().getLast());
+        }
+
         System.out.println("Adding metadata..");
         resourcePack.packMeta(PACK_FORMAT, DESCRIPTION);
         resourcePack.icon(Writable.resource(ClassLoader.getSystemClassLoader(), "pack.png"));
@@ -58,5 +94,24 @@ public class Main {
         if (!file_extension.equals("png")) return;
 
         System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable));
+    }
+
+    public static void doArmourFile(ResourcePack resourcePack, File img, File img2) {
+        Writable writable1 = Writable.file(img);
+        Writable writable2 = Writable.file(img2);
+
+        String[] split_filename = img.getName().split("\\.");
+        String asset_name = split_filename[0];
+        String file_extension = split_filename[1].toLowerCase();
+
+        if (!file_extension.equals("png")) return;
+
+        String[] split_filename2 = img.getName().split("\\.");
+        String asset_name2 = split_filename2[0];
+        String file_extension2 = split_filename2[1].toLowerCase();
+
+        if (!file_extension2.equals("png")) return;
+
+        System.out.println("Adding "+asset_name+"... Status: "+ DFArmourTexture.createArmourTexture(resourcePack, asset_name, writable1, asset_name2, writable2));
     }
 }
