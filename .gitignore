@@ -41,3 +41,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+## DFJavaResourcesPlus
+build
+libs
+creative
+dfjavaresourcesplus.zip
+DFSmpPlus.jar
