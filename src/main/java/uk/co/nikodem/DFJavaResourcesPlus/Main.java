@@ -40,6 +40,17 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println("Adding tool assets..");
+        try (Stream<Path> paths = Files.walk(Paths.get("assets/tools"))) {
+            for (Path path : paths.toList()) {
+                File file = path.toFile();
+                if (file.isFile()) doToolFile(resourcePack, file);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         Map<String, List<File>> armours = new HashMap<>();
 
         System.out.println("Adding armour assets..");
@@ -84,6 +95,18 @@ public class Main {
         System.out.println("Done!");
     }
 
+    public static void doToolFile(ResourcePack resourcePack, File img) {
+        Writable writable = Writable.file(img);
+
+        String[] split_filename = img.getName().split("\\.");
+        String asset_name = split_filename[0];
+        String file_extension = split_filename[1].toLowerCase();
+
+        if (!file_extension.equals("png")) return;
+
+        System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable, "item/handheld"));
+    }
+
     public static void doItemFile(ResourcePack resourcePack, File img) {
         Writable writable = Writable.file(img);
 
@@ -93,7 +116,7 @@ public class Main {
 
         if (!file_extension.equals("png")) return;
 
-        System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable));
+        System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable, "item/generated"));
     }
 
     public static void doArmourFile(ResourcePack resourcePack, File img, File img2) {

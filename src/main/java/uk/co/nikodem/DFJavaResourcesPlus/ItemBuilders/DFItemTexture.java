@@ -15,7 +15,7 @@ import static uk.co.nikodem.DFJavaResourcesPlus.Main.MINECRAFT;
 import static uk.co.nikodem.DFJavaResourcesPlus.Main.NAMESPACE;
 
 public class DFItemTexture {
-    public static boolean createItemTexture(ResourcePack resourcePack, @Subst("example_item") String itemName, Writable file) {
+    public static boolean createItemTexture(ResourcePack resourcePack, @Subst("example_item") String itemName, Writable file, @Subst("item/generated") String parent) {
 
         String namespaced = "item/"+itemName;
         String namespacedTextureFile = "item/"+itemName+".png";
@@ -26,7 +26,7 @@ public class DFItemTexture {
                 .build();
 
         Model model = Model.model()
-                .parent(Key.key(MINECRAFT, "item/handheld"))
+                .parent(Key.key(MINECRAFT, parent))
                 .key(Key.key(NAMESPACE, namespaced))
                 .textures(ModelTextures.builder()
                         .addLayer(
