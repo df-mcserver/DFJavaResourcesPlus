@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class Main {
@@ -26,20 +25,11 @@ public class Main {
         System.out.println("Starting resource pack creation..");
         ResourcePack resourcePack = ResourcePack.resourcePack();
 
-        System.out.println("Adding item assets..");
-        try (Stream<Path> paths = Files.walk(Paths.get("assets/items"))) {
+        System.out.println("Adding basic item assets..");
+        try (Stream<Path> paths = Files.walk(Paths.get("assets/basic_items"))) {
             for (Path path : paths.toList()) {
-                File img = path.toFile();
-                if (!img.isFile()) continue;
-                Writable writable = Writable.file(img);
-
-                String[] split_filename = img.getName().split("\\.");
-                String asset_name = split_filename[0];
-                String file_extension = split_filename[1].toLowerCase();
-
-                if (!file_extension.equals("png")) continue;
-
-                System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable));
+                File file = path.toFile();
+                if (file.isFile()) doItemFile(resourcePack, file);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,5 +46,17 @@ public class Main {
         );
 
         System.out.println("Done!");
+    }
+
+    public static void doItemFile(ResourcePack resourcePack, File img) {
+        Writable writable = Writable.file(img);
+
+        String[] split_filename = img.getName().split("\\.");
+        String asset_name = split_filename[0];
+        String file_extension = split_filename[1].toLowerCase();
+
+        if (!file_extension.equals("png")) return;
+
+        System.out.println("Adding "+asset_name+"... Status: "+DFItemTexture.createItemTexture(resourcePack, asset_name, writable));
     }
 }
