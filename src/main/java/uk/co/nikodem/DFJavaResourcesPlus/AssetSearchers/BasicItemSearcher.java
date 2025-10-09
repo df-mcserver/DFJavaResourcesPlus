@@ -37,6 +37,7 @@ public class BasicItemSearcher implements AssetSearcher {
         FilenameSplitter filename = new FilenameSplitter(img);
         if (!filename.getExtension().equals("png")) return;
 
-        System.out.println("Adding "+filename.getFilename()+"... Status: "+ DFItemTexture.createItemTexture(resourcePack, filename.getFilename(), writable, "item/generated"));
+        DFItemTexture.createItemTexture(resourcePack, filename.getFilename(), writable, "item/generated");
+//        System.out.println("Adding "+filename.getFilename()+"... Status: "+ DFItemTexture.createItemTexture(resourcePack, filename.getFilename(), writable, "item/generated"));
     }
 }

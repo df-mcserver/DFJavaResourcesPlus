@@ -70,6 +70,7 @@ public class ArmourSearcher implements AssetSearcher {
 
         if (!file_extension2.equals("png")) return;
 
-        System.out.println("Adding "+asset_name+"... Status: "+ DFArmourTexture.createArmourTexture(resourcePack, asset_name, writable1, asset_name2, writable2));
+        DFArmourTexture.createArmourTexture(resourcePack, asset_name, writable1, asset_name2, writable2);
+//        System.out.println("Adding "+asset_name+"... Status: "+ DFArmourTexture.createArmourTexture(resourcePack, asset_name, writable1, asset_name2, writable2));
     }
 }
