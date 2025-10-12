@@ -17,10 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
-
-import static java.util.Map.entry;
 
 public class EmojiSearcher implements AssetSearcher {
     @Override

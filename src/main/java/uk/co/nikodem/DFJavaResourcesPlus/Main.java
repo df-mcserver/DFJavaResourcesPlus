@@ -5,11 +5,9 @@ import team.unnamed.creative.ResourcePack;
 import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.metadata.pack.PackFormat;
 import team.unnamed.creative.metadata.pack.PackMeta;
+import team.unnamed.creative.model.*;
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter;
-import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.ArmourSearcher;
-import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.BasicItemSearcher;
-import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.EmojiSearcher;
-import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.ToolSearcher;
+import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.*;
 import uk.co.nikodem.DFJavaResourcesPlus.Utils.Logger;
 
 import java.io.File;
@@ -35,7 +33,14 @@ public class Main {
                 new ToolSearcher(),
                 new BasicItemSearcher(),
                 new ArmourSearcher(),
-                new EmojiSearcher() // hardcoded values
+
+                // hardcoded values
+                new EmojiSearcher(),
+                new MusicDiscSearcher(),
+
+                // hardcoded searchers
+                new ComicallyLargeSearcher(),
+                new CompassSearcher()
         );
 
         for (AssetSearcher assetSearcher : assetSearchers) {
