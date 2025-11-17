@@ -40,7 +40,9 @@ public class Main {
 
                 // hardcoded searchers
                 new ComicallyLargeSearcher(),
-                new CompassSearcher()
+                new CompassSearcher(),
+                new FloralToolSearcher(),
+                new FloralItemSearcher()
         );
 
         for (AssetSearcher assetSearcher : assetSearchers) {

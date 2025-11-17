@@ -6,6 +6,7 @@ import team.unnamed.creative.ResourcePack;
 import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.item.Item;
 import team.unnamed.creative.item.ItemModel;
+import team.unnamed.creative.metadata.animation.AnimationMeta;
 import team.unnamed.creative.model.Model;
 import team.unnamed.creative.model.ModelTexture;
 import team.unnamed.creative.model.ModelTextures;
@@ -23,6 +24,36 @@ public class DFItemTexture {
         Texture texture = Texture.texture()
                 .key(Key.key(NAMESPACE, namespacedTextureFile))
                 .data(file)
+                .build();
+
+        Model model = Model.model()
+                .parent(Key.key(MINECRAFT, parent))
+                .key(Key.key(NAMESPACE, namespaced))
+                .textures(ModelTextures.builder()
+                        .addLayer(
+                                ModelTexture.ofKey(Key.key(NAMESPACE, namespaced))
+                        )
+                        .build())
+                .build();
+
+        Item item = Item.item(Key.key(NAMESPACE, itemName),
+                ItemModel.reference(model.key()));
+
+        resourcePack.model(model);
+        resourcePack.texture(texture);
+        resourcePack.item(item);
+
+        return true;
+    }
+
+    public static boolean createAnimatedItemTexture(ResourcePack resourcePack, @Subst("example_item") String itemName, Writable file, @Subst("item/generated") String parent, AnimationMeta meta) {
+        String namespaced = "item/"+itemName;
+        String namespacedTextureFile = "item/"+itemName+".png";
+
+        Texture texture = Texture.texture()
+                .key(Key.key(NAMESPACE, namespacedTextureFile))
+                .data(file)
+                .animationMeta(meta)
                 .build();
 
         Model model = Model.model()
