@@ -6,6 +6,8 @@ import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.metadata.pack.PackFormat;
 import team.unnamed.creative.metadata.pack.PackMeta;
 import team.unnamed.creative.model.*;
+import team.unnamed.creative.resources.MergeStrategy;
+import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackReader;
 import team.unnamed.creative.serialize.minecraft.MinecraftResourcePackWriter;
 import uk.co.nikodem.DFJavaResourcesPlus.AssetSearchers.*;
 import uk.co.nikodem.DFJavaResourcesPlus.Utils.Logger;
@@ -29,6 +31,8 @@ public class Main {
         logger.log("Main", "Starting resource pack compilation...");
         ResourcePack resourcePack = ResourcePack.resourcePack();
 
+        ResourcePack basePack = getBasePack();
+
         List<AssetSearcher> assetSearchers = List.of(
                 new ToolSearcher(),
                 new BasicItemSearcher(),
@@ -50,21 +54,29 @@ public class Main {
             assetSearcher.run(resourcePack);
         }
 
+        basePack.merge(resourcePack, MergeStrategy.override());
+
         logger.log("Main", "Adding metadata..");
-        resourcePack.packMeta(
+        basePack.packMeta(
                 PackMeta.of(
                         PackFormat.format(MIN_PACK_FORMAT, MIN_PACK_FORMAT, MAX_PACK_FORMAT),
                         Component.text(DESCRIPTION)
                 )
         );
-        resourcePack.icon(Writable.resource(ClassLoader.getSystemClassLoader(), "pack.png"));
+        basePack.icon(Writable.resource(ClassLoader.getSystemClassLoader(), "pack.png"));
 
         logger.log("Main", "Writing to zip..");
         MinecraftResourcePackWriter.minecraft().writeToZipFile(
                 new File(OUTPUT_FILENAME),
-                resourcePack
+                basePack
         );
 
         logger.log("Main", "Resource pack finished compiling!");
+    }
+
+    public static ResourcePack getBasePack() {
+        File overlayPack = new File("overlay_pack");
+        if (overlayPack.exists() && overlayPack.isDirectory()) return MinecraftResourcePackReader.minecraft().readFromDirectory(new File("overlay_pack"));
+        else return ResourcePack.resourcePack();
     }
 }
